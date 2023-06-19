@@ -22,14 +22,16 @@ if response.status_code == 200:
     # Merge the DataFrames
     df = pd.concat([df, stakedSnx_df], axis=1)
 
+    # Convert Unix timestamp to UTC
+    df['timestamp_utc'] = pd.to_datetime(df['timestamp'], unit='s').dt.tz_localize('UTC')
+
     # Check if the CSV file already exists
-    if os.path.isfile('../staking_ratio.csv'):
+    if os.path.isfile('staking_ratio.csv'):
         # Append DataFrame to the existing CSV file
-        df.to_csv('../staking_ratio.csv', mode='a', header=False, index=False)
+        df.to_csv('staking_ratio.csv', mode='a', header=False, index=False)
     else:
         # Create a new CSV file
-        df.to_csv('../staking_ratio.csv', index=False)
+        df.to_csv('staking_ratio.csv', index=False)
     print("Staking Data Updated")
 else:
     print('Request failed with status code:', response.status_code)
-
